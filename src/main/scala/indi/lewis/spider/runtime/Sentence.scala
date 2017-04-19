@@ -2,6 +2,7 @@ package indi.lewis.spider.runtime
 
 import indi.lewis.spider.runtime.symbol.{Operator, Token}
 import indi.lewis.spider.runtime.symbol.ast.ConstToken
+import indi.lewis.spider.runtime.fnlink.Instructions
 
 /**
   * Created by lewis on 2017/4/12.
@@ -27,6 +28,8 @@ class Sentence(val first:SyntaxSymbol ) {
     } else null
   }
 
+
+
   def print():Unit={
     var iterator=ff;
     val builder=new StringBuilder();
@@ -41,4 +44,5 @@ class Sentence(val first:SyntaxSymbol ) {
 object Sentence {
   def apply(first: SyntaxSymbol): Sentence
   = new Sentence(first)
+
 }

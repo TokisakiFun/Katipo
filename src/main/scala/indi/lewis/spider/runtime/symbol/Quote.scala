@@ -1,7 +1,8 @@
 package indi.lewis.spider.runtime.symbol
 
 import indi.lewis.spider.runtime.SyntaxSymbol
-import indi.lewis.spider.runtime.symbol.ast.ConstToken;
+import indi.lewis.spider.runtime.symbol.ast.ConstToken
+import indi.lewis.spider.runtime.fnlink.Instructions;
 
 /**
   * Created by lewis on 2017/4/12.
@@ -41,4 +42,6 @@ class Quote () extends SyntaxSymbol{
   }
 
   override def ast(): Token = new ConstToken(this)
+
+  override def retType(): Class[_] = classOf[String]
 }

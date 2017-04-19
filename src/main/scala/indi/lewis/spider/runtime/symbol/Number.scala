@@ -34,4 +34,6 @@ class Number() extends SyntaxSymbol{
   override def literalValue(): String = value.toString
 
   override def ast(): Token = new ConstToken(this);
+
+  override def retType(): Class[_] = if(literalValue().indexOf('.') > -1) classOf[Double] else classOf[Int]
 }

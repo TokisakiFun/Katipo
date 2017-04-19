@@ -26,4 +26,6 @@ class Blank() extends SyntaxSymbol  {
   override def literalValue(): String = value.toString
 
   override def ast(): Token = null
+
+  override def retType(): Class[_] = null
 }

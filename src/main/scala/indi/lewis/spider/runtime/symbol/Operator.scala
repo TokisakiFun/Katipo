@@ -39,4 +39,6 @@ class Operator() extends SyntaxSymbol{
     }else self.ast(this)
 
   }
+
+  override def retType(): Class[_] = null
 }

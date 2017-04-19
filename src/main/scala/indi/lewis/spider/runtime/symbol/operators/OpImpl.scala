@@ -97,6 +97,12 @@ object OpImpl {
 
     //逗号
     regist(classOf[Comma]);
+
+    //var
+    regist(classOf[Variable]);
+
+    //赋值
+    regist(classOf[Assign]);
   }
 
 

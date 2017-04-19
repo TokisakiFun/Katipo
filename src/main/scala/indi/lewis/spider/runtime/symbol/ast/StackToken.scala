@@ -2,13 +2,15 @@ package indi.lewis.spider.runtime.symbol.ast
 
 import java.util
 
-import indi.lewis.spider.runtime.SyntaxSymbol
+import indi.lewis.spider.runtime.{ClassMeta, SyntaxSymbol}
 import indi.lewis.spider.runtime.symbol.Token
+import indi.lewis.spider.runtime.fnlink.{Instructions, OperationCode, RuntimeHeap}
 
 /**
   * Created by lewis on 2017/4/17.
   */
 class StackToken extends Token{
+
   private val stack=new util.ArrayList[SyntaxSymbol]();
 
   def push(s :SyntaxSymbol):Unit= if(s!=null) stack.add(s);
@@ -48,4 +50,36 @@ class StackToken extends Token{
 
     (builder.toString(),builder2.toString())
   }
+
+  override def instruction (ins:Instructions): Instructions = throw new Exception("should not use this method ! use method runtimeRet instead!");
+
+  def runtimeRet(ins:Instructions):RuntimeHeap =>Array[Any] ={
+    val size=stack.size();
+    val farr=new Array[RuntimeHeap =>Any](size);
+    for(i <- 0 to size-1){
+      val t=stack.get(i);
+      if(t.isInstanceOf[Token]){
+        t.asInstanceOf[Token].instruction(ins);
+      }else{
+        new ConstToken(t.asInstanceOf[SyntaxSymbol]).instruction(ins);
+      }
+      farr(i)=ins.functionLink;
+    }
+
+    { heap:RuntimeHeap =>
+      val arr=new Array[Any](size);
+      for(i <- 0 to size-1) arr(i)=farr(i)(heap)
+      arr
+    }
+  }
+
+  def clzArray(): Array[ClassMeta[Any]] = {
+    val arr=new Array[ClassMeta[Any]](stack.size());
+    for( i <- 0 to stack.size()-1) arr(i)=new ClassMeta(stack.get(i).retType()) ;
+    arr
+  }
+
+  override def retType(): Class[_] = classOf[Array[Any]]
+
+  def stackSize():Int=stack.size()
 }

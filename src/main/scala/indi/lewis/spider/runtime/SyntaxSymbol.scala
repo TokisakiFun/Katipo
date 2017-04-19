@@ -2,7 +2,8 @@ package indi.lewis.spider.runtime
 
 import java.util
 
-import indi.lewis.spider.runtime.symbol.{Blank, Operator, Quote, Token,Number}
+import indi.lewis.spider.runtime.symbol.{Blank, Number, Operator, Quote, Token}
+import indi.lewis.spider.runtime.fnlink.Instructions
 
 
 /**
@@ -21,6 +22,8 @@ trait SyntaxSymbol {
   def literalValue():String ;
 
   def ast(): Token ;
+
+  private[runtime] def retType():Class[_] ;
 
 }
 
@@ -56,6 +59,12 @@ object SyntaxSymbol {
       var iterator=tmpSymbol.iterator();
       if(tmpSymbol.size()==1){
         cur=tmpSymbol.get(0);
+      }else if(tmpSymbol.size()==2){
+        if(tmpSymbol.get(0).isInstanceOf[Token]&&tmpSymbol.get(1).isInstanceOf[Operator]){
+          cur=tmpSymbol.get(1)
+        }else if(tmpSymbol.get(0).isInstanceOf[Operator]&&tmpSymbol.get(1).isInstanceOf[Token]){
+          cur=tmpSymbol.get(0)
+        }
       }
       while(iterator.hasNext){
         val s=iterator.next();
@@ -111,6 +120,7 @@ object SyntaxSymbol {
     var next=ofirst
     while(next!=null){
       next.nextSymbol=findNext(next.nextSymbol);
+      if(next.nextSymbol!=null) next.nextSymbol.preSymbol=next;
       next=next.nextSymbol
     }
 

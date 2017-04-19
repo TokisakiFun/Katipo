@@ -1,8 +1,7 @@
 package indi.lewis.spider.runtime.symbol
 
 import indi.lewis.spider.runtime.SyntaxSymbol
-import indi.lewis.spider.runtime.symbol.ast.{ConstToken, FunctionToken, TempToken}
-import indi.lewis.spider.runtime.vm.OperationCode;
+import indi.lewis.spider.runtime.fnlink.{Instructions, RuntimeHeap};
 
 /**
   * Created by lewis on 2017/4/12.
@@ -10,6 +9,7 @@ import indi.lewis.spider.runtime.vm.OperationCode;
 class Token() extends SyntaxSymbol {
 
   private val value=new java.lang.StringBuffer()
+  private var ins :Instructions=null;
 
   override def testAdd(c: Char): Boolean = {
     if(value.length()==0){
@@ -36,8 +36,21 @@ class Token() extends SyntaxSymbol {
 
   def calc():(String,String)=(null,literalValue())
 
-  override def ast(): Token = {
-    new ConstToken(this)
+  def instruction( ins :Instructions ):Instructions= {
+    this.ins=ins;
+    val li=ins.getObjIndex(literalValue());
+    ins.functionLink={ heap:RuntimeHeap =>
+      heap.getValue(li);
+    }
+    ins;
+  }
+
+  override def ast(): Token =  this
+
+  override def retType(): Class[_] = {
+    val od=ins.getObjDef(ins.getObjIndex(literalValue()));
+    if(od==null) throw new RuntimeException("could not found defined heap object with name "+literalValue() +" ! ");
+    od.obType
   }
 }
 

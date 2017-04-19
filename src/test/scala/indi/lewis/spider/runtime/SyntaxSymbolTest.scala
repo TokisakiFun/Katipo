@@ -18,13 +18,13 @@ object SyntaxSymbolTest {
       println(ret._2)
     }
 
-    f ("a.call(12,\"fff\",d%2)");
+    f ("a.call(12,\"fff\",d%2).get(12)");
 
     f ("a.call(b(),c(e,f),d/3)");
 
     f ("a.call(1*2,c(e,f),7-6,5*d(1,2))");
 
-    f ("f-g*call(f,a+b-c*d/f%e)");
+    f ("kk=f-g*call(f,a+b-c*d/f%e)");
 
   }
 }

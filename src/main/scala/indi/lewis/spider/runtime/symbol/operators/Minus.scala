@@ -1,7 +1,7 @@
 package indi.lewis.spider.runtime.symbol.operators
 
 import indi.lewis.spider.runtime.symbol.{Operator, Token}
-import indi.lewis.spider.runtime.vm.OperationCode
+import indi.lewis.spider.runtime.fnlink.OperationCode
 
 /**
   * Created by lewis on 17-4-14.
