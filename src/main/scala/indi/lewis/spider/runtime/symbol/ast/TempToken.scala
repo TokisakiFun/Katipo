@@ -56,13 +56,18 @@ class TempToken() extends Token{
     (lf,lt)
   }
 
+  private def isConstant(s:SyntaxSymbol):Boolean= (!s.isInstanceOf[Token]) || (s.isInstanceOf[TempToken]&&s.asInstanceOf[TempToken].returnIsConstant())
+
+  def returnIsConstant():Boolean= isConstant(left) && isConstant(right)
+
+
   override def instruction (ins:Instructions): Instructions ={
     val lt:(RuntimeHeap=>Any,Class[_])=calcType(left,ins);
     val rt:(RuntimeHeap=>Any,Class[_])=calcType(right,ins);
     //对等号做特殊处理
     if(operate!=OperationCode.OP_ASSIGN){
        val rte=OperationCode.codeToFunction(operate,lt,rt) ;
-      if((!left.isInstanceOf[Token])&&(!right.isInstanceOf[Token])){
+      if(returnIsConstant){
         val ret1=rte._1(null);
         ins.functionLink={heap:RuntimeHeap => ret1 }
       }else {
